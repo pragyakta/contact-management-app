@@ -1,0 +1,17 @@
+.container {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+ }
+ 
+ .error {
+   margin: 50px auto;
+   font-size: 18px;
+   text-transform: uppercase;
+ }
+ 
+ @media (max-width: 770px) {
+    .container {
+      width: 100%;
+    }
+  }
