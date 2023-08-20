@@ -1,27 +1,19 @@
 import React, { useState } from 'react';
-import { useAppSelector } from '../store/store'; // Update the path
 import { Person, deletePerson } from '../store/features/personSlices';
-import { useDispatch } from 'react-redux';
+
 
 interface ContactListProps {
   contacts: Person[];
   onEditContact: (contact: Person) => void;
+  onDeleteContact: (contactName: string) => void;
 }
 
-const ContactList: React.FC<ContactListProps> = ({contacts,onEditContact}) => {
+const ContactList: React.FC<ContactListProps> = ({contacts,onEditContact, onDeleteContact, }) => {
   
-
-  
-  const dispatch = useDispatch();
-  
-
-  const handleDeleteContact = (contactName: string) => {
-    dispatch(deletePerson(contactName));
-  };
 
   return (
     <div>
-      <h2>Contact List</h2>
+      <h2 className="text-3xl font-bold mb-4">Contact List</h2>
       {contacts.map((contact) => (
         <div key={contact.name} className="border p-4 mb-4">
           <p>
@@ -40,7 +32,7 @@ const ContactList: React.FC<ContactListProps> = ({contacts,onEditContact}) => {
           mr-2" onClick={() => onEditContact(contact)}
           >Edit</button>
           <button className="bg-red-500 hover:bg-red-600 text-white py-2 px-4 rounded
-          mr-2"  onClick={() => handleDeleteContact(contact.name)}
+          mr-2"  onClick={() => onDeleteContact(contact.name)}
           >Delete</button>
 
 

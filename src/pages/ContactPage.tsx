@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import ContactForm from '../components/ContactForm';
 import ContactList from '../components/ContactList';
 
-import { useNavigate } from 'react-router-dom';
-import { Person } from '../store/features/personSlices';
+import { Person, deletePerson } from '../store/features/personSlices';
+import { useAppDispatch} from '../store/store';
 
 const ContactPage: React.FC = () => {
   const [showForm, setShowForm] = useState(false);
@@ -15,8 +15,6 @@ const ContactPage: React.FC = () => {
     setShowForm(!showForm);
   };
 
-  const navigate = useNavigate();
-
   const handleAddContact = (contact: Person) => {
     setContacts([...contacts, contact]);
     setShowForm(false); // Hide the form after adding a contact
@@ -27,6 +25,20 @@ const ContactPage: React.FC = () => {
     setShowForm(true); // Show the contact form
   };
 
+  const dispatch = useAppDispatch(); // Get dispatch function
+
+  const handleDeleteContact = async (contactName: string) => {
+    try {
+      await dispatch(deletePerson(contactName)); // Assuming deletePerson is an asynchronous action
+      // Remove the deleted contact from the local state
+      setContacts(contacts.filter(contact => contact.name !== contactName));
+    } catch (error) {
+      // Handle error, if needed
+      console.error("Error deleting contact:", error);
+    }
+  };
+ 
+
   return (
     <div className="grid grid-cols-2 gap-8 p-8 bg-white shadow-md">
       <div className="col-span-1">
@@ -35,11 +47,12 @@ const ContactPage: React.FC = () => {
           className="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded mb-4"
           onClick={handleToggleForm}
         >
-          {showForm ? 'Show Contact List' : 'Show Contact Form'}
+          {showForm ? 'Contact List' : 'Add Contact'}
         </button>
         {contacts.length === 0 && !showForm ? (
           <p className="text-red-500 font-semibold">
-            No contact found. Please add a contact.
+            No contact found. Please add a contact by clicking 
+            on Add contact button.
           </p>
         ) : null}
 
@@ -48,6 +61,7 @@ const ContactPage: React.FC = () => {
           <ContactForm
             onAddContact={handleAddContact}
             editingContact={editingContact}
+            
           />
         )}
       </div>
@@ -56,7 +70,8 @@ const ContactPage: React.FC = () => {
         {contacts.length > 0 && (
           <ContactList
             contacts={contacts}
-            onEditContact={handleEditContact} // Pass the handler to ContactList
+            onEditContact={handleEditContact} 
+            onDeleteContact={handleDeleteContact}
           />
         )}
       </div>
